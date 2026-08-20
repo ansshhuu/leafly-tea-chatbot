@@ -1,65 +1,37 @@
-from datetime import datetime, timezone
-
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.models.menu_item import MenuItem
-from app.models.order import Order
-from app.models.order_item import OrderItem
-
 HOT_WEATHER_WORDS = {"hot", "summer", "heat", "sunny", "humid"}
 COLD_WEATHER_WORDS = {"cold", "rain", "rainy", "winter", "chilly", "monsoon"}
 
-TIME_OF_DAY_CATEGORIES = {
-    "breakfast": {"Bakery", "Hot Beverages"},
-    "afternoon": {"Snacks", "Cold Beverages"},
-    "evening": {"Bakery", "Hot Beverages"},
-}
-
-REORDER_KEYWORDS = {
-    "again", "usual", "last time", "previous order", "reorder",
-    "same as before", "same as last time", "my order",
-}
+# Hot weather calls for lighter, more refreshing teas; cold/rainy weather
+# calls for warmer, bolder ones - loosely mirrors how the site's own
+# collection taglines describe each tea_type ("Fresh & Delicate" for green,
+# "Rich & Bold" for black).
+HOT_WEATHER_TEA_TYPES = {"green", "white"}
+COLD_WEATHER_TEA_TYPES = {"black", "oolong", "pu-erh"}
 
 SHORTLIST_SIZE = 8
 
 
-def time_bucket(now: datetime | None = None) -> str:
-    hour = (now or datetime.now(timezone.utc)).hour
-    if 7 <= hour < 11:
-        return "breakfast"
-    if 11 <= hour < 17:
-        return "afternoon"
-    return "evening"
-
-
-def weather_bias_category(user_message: str) -> str | None:
+def weather_bias_tea_types(user_message: str) -> set[str] | None:
     text = user_message.lower()
     if any(word in text for word in HOT_WEATHER_WORDS):
-        return "Cold Beverages"
+        return HOT_WEATHER_TEA_TYPES
     if any(word in text for word in COLD_WEATHER_WORDS):
-        return "Hot Beverages"
+        return COLD_WEATHER_TEA_TYPES
     return None
 
 
-def _score(item: dict, bucket: str, weather_category: str | None) -> int:
+def _score(item: dict, weather_tea_types: set[str] | None) -> int:
     score = 0
-    if item["category"] in TIME_OF_DAY_CATEGORIES.get(bucket, set()):
-        score += 2
-    if weather_category and item["category"] == weather_category:
+    if item.get("badge"):
+        score += 1
+    if weather_tea_types and item.get("tea_type") in weather_tea_types:
         score += 3
     return score
 
 
-def shortlist(
-    candidates: list[dict],
-    user_message: str,
-    now: datetime | None = None,
-    time_of_day_override: str | None = None,
-) -> list[dict]:
-    bucket = time_of_day_override or time_bucket(now)
-    weather_category = weather_bias_category(user_message)
-    ranked = sorted(candidates, key=lambda item: _score(item, bucket, weather_category), reverse=True)
+def shortlist(candidates: list[dict], user_message: str) -> list[dict]:
+    weather_tea_types = weather_bias_tea_types(user_message)
+    ranked = sorted(candidates, key=lambda item: _score(item, weather_tea_types), reverse=True)
     return ranked[:SHORTLIST_SIZE]
 
 
@@ -82,26 +54,3 @@ def combo_within_budget(items: list[dict], budget: float, max_items: int = 3) ->
 
     _search(0, [], 0.0)
     return best_combo
-
-
-def mentions_previous_order(user_message: str) -> bool:
-    text = user_message.lower()
-    return any(keyword in text for keyword in REORDER_KEYWORDS)
-
-
-async def get_previous_order_summary(db: AsyncSession, session_id: str) -> str | None:
-    stmt = (
-        select(MenuItem.name, OrderItem.quantity)
-        .join(OrderItem, OrderItem.menu_item_id == MenuItem.id)
-        .join(Order, Order.id == OrderItem.order_id)
-        .where(Order.session_id == session_id, Order.status == "confirmed")
-        .order_by(Order.created_at.desc())
-        .limit(5)
-    )
-    result = await db.execute(stmt)
-    rows = result.all()
-    if not rows:
-        return None
-
-    items = ", ".join(f"{row.quantity}x {row.name}" for row in rows)
-    return f"Customer's previous order included: {items}"

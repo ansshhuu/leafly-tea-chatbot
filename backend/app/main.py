@@ -5,18 +5,16 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import chat, email, geocode, health, order, reservation
+from app.api.routes import chat, email, health
 from app.core.config import settings
-from app.services import menu_cache_service
-from app.services.reservation_service import run_reminder_check
+from app.services import product_cache_service
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    await menu_cache_service.warm()
-    await run_reminder_check()
+    await product_cache_service.warm()
     yield
 
 
@@ -32,10 +30,7 @@ app.add_middleware(
 
 app.include_router(health.router, prefix="/health", tags=["health"])
 app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
-app.include_router(order.router, prefix="/api/order", tags=["order"])
-app.include_router(reservation.router, prefix="/api/reservation", tags=["reservation"])
 app.include_router(email.router, prefix="/api/email", tags=["email"])
-app.include_router(geocode.router, prefix="/api/geocode", tags=["geocode"])
 
 
 @app.get("/")

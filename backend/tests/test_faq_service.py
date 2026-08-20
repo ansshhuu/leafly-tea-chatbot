@@ -1,9 +1,9 @@
 from app.services import faq_service
 
 
-def test_find_matches_returns_relevant_entry_for_wifi_question():
-    matches = faq_service.find_matches("Do you have wifi here?")
-    assert any(item["category"] == "wifi" for item in matches)
+def test_find_matches_returns_relevant_entry_for_sizes_question():
+    matches = faq_service.find_matches("What sizes are available?")
+    assert any(item["category"] == "sizes" for item in matches)
 
 
 def test_find_matches_returns_empty_for_unrelated_message():
@@ -12,33 +12,32 @@ def test_find_matches_returns_empty_for_unrelated_message():
 
 
 def test_find_matches_respects_top_n():
-    matches = faq_service.find_matches("hours parking wifi pets birthday payment", top_n=2)
+    matches = faq_service.find_matches("contact gifting sizes caffeine shipping returns", top_n=2)
     assert len(matches) <= 2
 
 
 def test_find_matches_uses_hint_keywords_too():
-    matches = faq_service.find_matches("tell me about that", hint_keywords=["parking"])
-    assert any(item["category"] == "parking" for item in matches)
+    matches = faq_service.find_matches("tell me about that", hint_keywords=["gifting"])
+    assert any(item["category"] == "gifting" for item in matches)
 
 
 def test_find_matches_works_for_hindi_devanagari_script():
-    matches = faq_service.find_matches("क्या यहाँ पार्किंग है और वाई-फाई है?")
+    matches = faq_service.find_matches("क्या आप कॉर्पोरेट गिफ्टिंग करते हैं?")
     categories = {item["category"] for item in matches}
-    assert "parking" in categories
-    assert "wifi" in categories
+    assert "gifting" in categories
 
 
-def test_find_matches_works_for_marathi_devanagari_script():
-    matches = faq_service.find_matches("तुमच्याकडे वाढदिवस बुकिंग आहे का?")
-    assert any(item["category"] == "birthday" for item in matches)
+def test_find_matches_flags_shipping_as_a_todo_placeholder():
+    matches = faq_service.find_matches("what is your shipping policy?")
+    assert any(item["category"] == "shipping" and "TODO" in item["answer"] for item in matches)
 
 
 def test_format_faq_block_includes_question_and_answer():
     block = faq_service.format_faq_block(
-        [{"question": "Is parking available?", "answer": "Yes, free parking.", "category": "parking"}]
+        [{"question": "What sizes are available?", "answer": "Most teas are available in 100g and 250g sizes.", "category": "sizes"}]
     )
-    assert "Is parking available?" in block
-    assert "Yes, free parking." in block
+    assert "What sizes are available?" in block
+    assert "100g and 250g" in block
     assert "never invent" in block.lower()
 
 

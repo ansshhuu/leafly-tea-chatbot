@@ -6,12 +6,6 @@ _DEFAULTS = {
     "known_name": None,
     "known_phone": None,
     "known_email": None,
-    "reservation_draft": None,
-    "checkout_draft": None,
-    "feedback_pending": False,
-    "pending_addon_item_id": None,
-    "pending_addon_item_name": None,
-    "pending_addon_language": None,
 }
 
 _cache: dict[str, dict] = {}
@@ -22,12 +16,6 @@ def _row_to_state(row: ChatSession) -> dict:
         "known_name": row.known_name,
         "known_phone": row.known_phone,
         "known_email": row.known_email,
-        "reservation_draft": row.reservation_draft,
-        "checkout_draft": row.checkout_draft,
-        "feedback_pending": row.feedback_pending,
-        "pending_addon_item_id": row.pending_addon_item_id,
-        "pending_addon_item_name": row.pending_addon_item_name,
-        "pending_addon_language": row.pending_addon_language,
     }
 
 

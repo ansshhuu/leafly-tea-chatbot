@@ -1,10 +1,2 @@
-from pydantic import BaseModel
-
-
-class CartReminderRequest(BaseModel):
-    session_id: str
-
-
-class CartReminderResponse(BaseModel):
-    sent: bool
-    reason: str | None = None
+"""Bare scaffold - no active email endpoints yet. Will be filled in once the
+order/checkout system is rebuilt (see app.api.routes.email)."""

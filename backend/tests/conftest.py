@@ -5,13 +5,8 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from app.core.config import settings
 from app.db.session import Base
 from app.services import (
-    addon_service,
     cache_service,
-    checkout_draft_service,
-    feedback_service,
-    menu_cache_service,
-    reservation_draft_service,
-    reservation_service,
+    product_cache_service,
     session_context_service,
     session_service,
     weather_service,
@@ -40,15 +35,10 @@ def _enforce_test_mode(monkeypatch):
 
 @pytest.fixture(autouse=True)
 def _disable_real_email_sends(monkeypatch):
-    # Regression guard: ai_service tests drive full checkout/reservation
-    # flows through process_chat_message() without ever mocking
-    # email_service, and settings loads the REAL BREVO_API_KEY from .env (it
-    # isn't test-mode-gated - only Gemini calls are). Every test that
-    # completes a checkout was therefore hitting the live Brevo API and
-    # sending real emails on every test run, which silently burned through
-    # the account's daily free-tier send quota and caused real customer
-    # order-confirmation emails to fail with "insufficient credits" once
-    # exhausted. Blanking the key here makes email_service._send() take its
+    # Regression guard: settings loads the REAL BREVO_API_KEY from .env (it
+    # isn't test-mode-gated - only Gemini calls are), so without this any
+    # test that happens to trigger an email send would hit the live Brevo
+    # API. Blanking the key here makes email_service._send() take its
     # already-existing "not configured" no-op path by default; tests that
     # actually need to exercise the Brevo call path (test_email_service.py)
     # explicitly re-set it themselves after this fixture runs.
@@ -60,14 +50,9 @@ def _disable_real_email_sends(monkeypatch):
 def _reset_shared_state():
     cache_service.clear()
     session_context_service.clear()
-    reservation_draft_service.clear()
-    checkout_draft_service.clear()
-    feedback_service.clear()
-    addon_service.clear()
     session_service.clear()
     weather_service.clear()
-    menu_cache_service.clear()
-    reservation_service._last_reminder_check = None
+    product_cache_service.clear()
     rate_limiter._minute_key = None
     rate_limiter._minute_count = 0
     rate_limiter._day_key = None
