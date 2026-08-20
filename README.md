@@ -1,33 +1,34 @@
-# Smart Cafe Assistant
+# Leafly Tea Assistant
 
-An AI-powered cafe chat assistant: menu search, personalized recommendations,
-order taking, table reservations, FAQ answers, sentiment-driven escalation,
-multilingual replies (English/Hindi/Marathi), voice input/output, and photo-based
-menu matching - built on FastAPI + PostgreSQL + a React chat UI, powered by
-Gemini (`gemini-3.1-flash-lite`).
+An AI-powered chat assistant for **Leafly**, a whole-leaf, single-origin tea
+brand ("Better Tea. Better World. Better You."). It handles tea catalog
+search, personalized recommendations, FAQ answers, and sentiment-driven
+escalation, replying in whichever language the customer used (English,
+Hindi, or Hinglish) - built on FastAPI + PostgreSQL + a React chat UI,
+powered by Gemini (`gemini-3.1-flash-lite`).
 
+> The order/checkout system is being rebuilt from scratch and isn't wired up
+> yet - `POST /api/email` is currently a bare scaffold with no active
+> endpoints (see `backend/app/api/routes/email.py`).
 
 ## Feature checklist
 
 | Feature | Where it lives |
 |---|---|
 | Context-aware chat (last 10 messages) | `backend/app/services/ai_service.py` |
-| Menu search + filters (veg/vegan/gluten-free/spice/price/category) | `menu_context.py` |
-| Personalized recommendations (time-of-day, weather keyword, budget combos) | `recommendation_service.py` |
-| "No exact match" fallback (closest available item, never a dead end) | `menu_context.get_closest_items` |
-| Order assistant (add/remove/modify/checkout, Python-computed totals) | `order_service.py` |
-| Reservation assistant (availability, alternatives, `dateparser` date resolution) | `reservation_service.py` |
-| Dynamic FAQ (keyword-matched, grounded, never invented) | `faq_service.py`, `app/data/faq_knowledge.json` |
+| Tea catalog search + filters (tea type/origin/caffeine level/badge/price/gifting) | `product_context.py` |
+| Personalized recommendations (weather-aware tea type bias, budget combos) | `recommendation_service.py` |
+| "No exact match" fallback (closest available product, never a dead end) | `product_context.get_closest_items` |
+| Dynamic FAQ (keyword-matched, grounded, never invented - some entries still TODO pending real answers from the team) | `faq_service.py`, `app/data/faq_knowledge.json` |
 | Sentiment detection + escalation logging | `escalation_service.py` |
-| Multilingual (English/Hindi/Marathi), incl. order/reservation confirmations | `app/prompts/system_prompt.py`, `app/prompts/templates.py` |
-| Image understanding (photo → matching menu items) | `vision_service.py`, `POST /api/chat/image` |
+| Multilingual (English/Hindi/Hinglish), incl. product-name translation | `app/prompts/system_prompt.py`, `app/prompts/product_translations.py` |
 | Rate limiting + in-memory response caching | `rate_limiter.py`, `cache_service.py` |
-| Email notifications - order/reservation confirmation, reservation reminder, birthday wish, cart-abandonment nudge (Brevo) | `email_service.py`, `POST /api/email/cart-reminder` |
+| Weather-aware welcome greeting (browser geolocation, best-effort) | `weather_service.py`, `GET /api/chat/welcome` |
 
 ## Project structure
 
 ```
-smart-cafe-assistant/
+leafly-tea-chatbot/
 ├── frontend/     # Vite + React chat UI
 ├── backend/      # FastAPI + SQLAlchemy (async) + Alembic
 └── docker-compose.yml
@@ -48,18 +49,16 @@ All backend config lives in `backend/.env` (copy from `backend/.env.example`).
 |---|---|---|---|
 | `DATABASE_URL` | yes | - | Async (asyncpg) connection string, used by the running app |
 | `SYNC_DATABASE_URL` | yes | - | Sync (psycopg2) connection string, used only by Alembic |
-| `APP_NAME` | no | `Smart Cafe Assistant` | |
+| `APP_NAME` | no | `Leafly Tea Assistant` | |
 | `ENV` | no | `development` | |
-| `GEMINI_API_KEY` | yes | - | Required for any AI feature (chat, order, reservation, FAQ, vision) |
+| `GEMINI_API_KEY` | yes | - | Required for any AI feature (chat, recommendations, FAQ) |
 | `GEMINI_MODEL` | no | `gemini-3.1-flash-lite` | |
 | `GEMINI_RPM_LIMIT` / `GEMINI_RPD_LIMIT` | no | `12` / `450` | Soft caps kept under the free-tier hard limits (15 RPM / 500 RPD) - once hit, the app returns a graceful "high demand" fallback instead of calling the API |
 | `BREVO_API_KEY` | no | - | Free tier (300 emails/day, no card needed, sends to any recipient without a verified domain) - https://brevo.com. If unset, `email_service.py` logs a warning and skips sending; every other feature keeps working normally |
 
-Cafe operating parameters (`TAX_RATE`, per-weekday `CAFE_HOURS`,
-`MAX_CAPACITY_PER_SLOT`, `SLOT_DURATION_MINUTES`) are **not** env vars -
-per-weekday hours don't map cleanly to a flat env var, so they're finalized
-constants directly in `backend/app/core/config.py`. Edit that file if the
-real cafe's values differ.
+Brand constants (`BRAND_NAME`, `TAGLINES`, `BRAND_PILLARS`, `CONTACT_EMAIL`)
+are **not** env vars - they're finalized directly in
+`backend/app/core/config.py`. Edit that file if the real brand copy changes.
 
 Frontend config: `frontend/.env` (optional) or Vercel project settings -
 `VITE_API_BASE_URL` (defaults to `http://localhost:8000` if unset).
@@ -83,9 +82,9 @@ Frontend config: `frontend/.env` (optional) or Vercel project settings -
    ```
    docker-compose exec backend alembic upgrade head
    ```
-4. Seed the menu:
+4. Seed the tea catalog:
    ```
-   docker-compose exec backend python -m app.seed.seed_menu
+   docker-compose exec backend python -m app.seed.seed_products
    ```
 5. Check backend health: http://localhost:8000/health — should report `"database": "ok"`.
 6. Open http://localhost:5173 and start chatting.
@@ -101,7 +100,7 @@ python -m venv .venv
 pip install -r requirements.txt
 cp .env.example .env          # fill in GEMINI_API_KEY and point DATABASE_URL at your Postgres
 alembic upgrade head
-python -m app.seed.seed_menu
+python -m app.seed.seed_products
 uvicorn app.main:app --reload
 ```
 
@@ -114,16 +113,6 @@ npm run dev
 ```
 
 Visit http://localhost:5173.
-
-`npm install` automatically runs `scripts/fetch-models.sh` via its
-`postinstall` hook, which downloads the self-hosted Whisper-WASM model files
-(~43MB, used as the voice-input fallback when the browser's native
-`SpeechRecognition` is unavailable/blocked - see `frontend/src/services/speech.js`)
-into `frontend/public/models/`. That folder is gitignored, so a fresh clone
-always needs this to run once - if it fails (offline install, `bash`
-unavailable, etc.) `npm install` still succeeds with a warning; run
-`bash scripts/fetch-models.sh` manually before relying on the Whisper
-fallback.
 
 ### Running tests
 
@@ -157,7 +146,7 @@ works equivalently.
    ```
    (from a machine/CI job with `SYNC_DATABASE_URL` pointed at it), then seed:
    ```
-   python -m app.seed.seed_menu
+   python -m app.seed.seed_products
    ```
 
 ### Backend (Render, or any Docker-capable host)
@@ -178,13 +167,6 @@ works equivalently.
 3. Set the environment variable `VITE_API_BASE_URL` to your deployed backend
    URL (step above), then redeploy (Vite bakes env vars in at build time, so
    changing this requires a rebuild, not just a restart).
-4. Verify CORS: the backend's `CORSMiddleware` currently allows all origins
-   (`allow_origins=["*"]`) - fine for this project's scope, but tighten to
-   your actual frontend origin before treating this as production-hardened.
-5. Vercel's default build runs `npm install` before `npm run build`, which
-   triggers `postinstall` → `scripts/fetch-models.sh` automatically - no
-   extra build-step config needed. Check the build log for
-   `[fetch-models]` lines to confirm the Whisper model files downloaded
-   successfully; a failure there won't fail the whole build (see the
-   frontend setup section above), so it's easy to miss otherwise.
-
+4. Verify CORS: the backend's `CORSMiddleware` allows the origins listed in
+   `CORS_ORIGINS` (`backend/.env`) - update it to include your actual
+   deployed frontend origin.
