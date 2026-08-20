@@ -1,13 +1,26 @@
 :root {
-  --cafe-cream: #fbf3e7;
-  --cafe-tan: #e8d5b7;
-  --cafe-brown: #6f4e37;
-  --cafe-dark-brown: #4a3222;
-  --cafe-orange: #d98e4a;
-  --cafe-accent: #c1440e;
-  --cafe-text: #3a2a1d;
-  --cafe-bubble-user: #d98e4a;
-  --cafe-bubble-assistant: #f3ece1;
+  --leafly-cream: #f7f3e9;
+  --leafly-tan: #e8dfc5;
+  --leafly-green-dark: #0d2818;
+  --leafly-green: #1f4d34;
+  --leafly-gold: #d4af37;
+  --leafly-text: #1f2e26;
+  --leafly-bubble-user: #0d2818;
+  --leafly-bubble-assistant: #f0ead9;
+
+  /* Legacy variable names (still referenced across the chat component
+     CSS) aliased onto the Leafly palette above, so the whole widget
+     re-themes from dark green + gold accents on cream without having to
+     touch every component's stylesheet individually. */
+  --cafe-cream: var(--leafly-cream);
+  --cafe-tan: var(--leafly-tan);
+  --cafe-brown: var(--leafly-green);
+  --cafe-dark-brown: var(--leafly-green-dark);
+  --cafe-orange: var(--leafly-gold);
+  --cafe-accent: var(--leafly-green-dark);
+  --cafe-text: var(--leafly-text);
+  --cafe-bubble-user: var(--leafly-bubble-user);
+  --cafe-bubble-assistant: var(--leafly-bubble-assistant);
 
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   color-scheme: light;
@@ -26,6 +39,6 @@ body,
 }
 
 body {
-  background: linear-gradient(180deg, var(--cafe-cream) 0%, var(--cafe-tan) 100%);
-  color: var(--cafe-text);
+  background: linear-gradient(180deg, var(--leafly-cream) 0%, var(--leafly-tan) 100%);
+  color: var(--leafly-text);
 }

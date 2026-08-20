@@ -6,8 +6,8 @@ function App() {
   return (
     <ChatProvider>
       <div className="app-backdrop">
-        <h1>Rasa Café</h1>
-        <p>Click the chat bubble in the corner to talk to Rumi, our virtual assistant.</p>
+        <h1>Leafly</h1>
+        <p>Click the chat bubble in the corner to talk to our tea assistant.</p>
       </div>
       <ChatWidget />
     </ChatProvider>

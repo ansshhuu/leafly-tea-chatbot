@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { fetchChatHistory, fetchWelcome, sendCartReminder, sendImageMessage, sendMessage } from '../services/api'
+import { fetchChatHistory, fetchWelcome, sendMessage } from '../services/api'
 import { getUserCoordinates } from '../services/geolocation'
 
 const ChatContext = createContext(null)
@@ -7,15 +7,13 @@ const ChatContext = createContext(null)
 const SESSION_ID_KEY = 'cafe.sessionId'
 const MESSAGES_KEY = 'cafe.messages'
 
-const CART_ABANDON_DELAY_MS = 3 * 60 * 1000
-
-const WELCOME_QUICK_ACTIONS = ['View Menu', 'Café Location', 'Book a Table', 'Events & Offers']
+const WELCOME_QUICK_ACTIONS = ['View Products', 'Gift Hampers']
 
 const initialMessages = [
   {
     id: 'welcome-1',
     role: 'assistant',
-    text: "Hi there! 👋 Welcome to Rasa Café. I'm Rumi - how can I help you today?",
+    text: "Hi there! 👋 Welcome to Leafly. How can I help you today?",
     timestamp: new Date().toISOString(),
     quickReplyOptions: WELCOME_QUICK_ACTIONS,
   },
@@ -69,29 +67,6 @@ export function ChatProvider({ children }) {
   const [messages, setMessages] = useState(() => loadStoredMessages() || initialMessages)
   const [isTyping, setIsTyping] = useState(false)
   const [language, setLanguage] = useState('en')
-
-  const abandonTimerRef = useRef(null)
-  const cartHasItemsRef = useRef(false)
-  const cartReminderFiredRef = useRef(false)
-
-  const clearAbandonTimer = useCallback(() => {
-    if (abandonTimerRef.current) {
-      clearTimeout(abandonTimerRef.current)
-      abandonTimerRef.current = null
-    }
-  }, [])
-
-  const scheduleAbandonTimer = useCallback(() => {
-    clearAbandonTimer()
-    if (!cartHasItemsRef.current || cartReminderFiredRef.current) return
-    abandonTimerRef.current = setTimeout(() => {
-      cartReminderFiredRef.current = true
-      sendCartReminder(sessionId).catch(() => {
-      })
-    }, CART_ABANDON_DELAY_MS)
-  }, [clearAbandonTimer, sessionId])
-
-  useEffect(() => clearAbandonTimer, [clearAbandonTimer])
 
   useEffect(() => {
     writeSessionStorage(SESSION_ID_KEY, sessionId)
@@ -179,41 +154,24 @@ export function ChatProvider({ children }) {
         sentiment: data.sentiment,
         menuDisplay: data.menu_display || null,
         suggestedItems: data.suggested_items || null,
-        orderSummary: data.order_summary || null,
         quickReplyOptions: data.quick_reply_options || null,
-        datePickerOptions: data.date_picker_options || null,
-        paymentRequest: data.payment_request || null,
-        loyaltyCard: data.loyalty_card || null,
         locationCards: data.location_cards || null,
-        awaitingAddressInput: data.awaiting_address_input || false,
       })
       if (data.language) setLanguage(data.language)
-
-      if (data.order_summary) {
-        if (data.order_summary.status === 'confirmed') {
-          cartHasItemsRef.current = false
-          cartReminderFiredRef.current = false
-          clearAbandonTimer()
-        } else {
-          cartHasItemsRef.current = (data.order_summary.items || []).length > 0
-          scheduleAbandonTimer()
-        }
-      }
     },
-    [addMessage, clearAbandonTimer, scheduleAbandonTimer]
+    [addMessage]
   )
 
   const sendUserMessage = useCallback(
-    async (text, addressCoords) => {
+    async (text) => {
       const trimmed = text.trim()
       if (!trimmed || isTyping) return
 
       const userMsgId = addMessage('user', trimmed, { status: 'sent' })
       setIsTyping(true)
-      scheduleAbandonTimer()
 
       try {
-        const data = await sendMessage(sessionId, trimmed, addressCoords)
+        const data = await sendMessage(sessionId, trimmed)
         setMessageStatus(userMsgId, 'delivered')
         handleAssistantReply(data)
       } catch {
@@ -222,29 +180,7 @@ export function ChatProvider({ children }) {
         setIsTyping(false)
       }
     },
-    [addMessage, handleAssistantReply, isTyping, scheduleAbandonTimer, sessionId, setMessageStatus]
-  )
-
-  const sendUserImage = useCallback(
-    async (file, caption) => {
-      if (!file || isTyping) return
-
-      const previewUrl = URL.createObjectURL(file)
-      const userMsgId = addMessage('user', caption?.trim() || '', { imageUrl: previewUrl, status: 'sent' })
-      setIsTyping(true)
-      scheduleAbandonTimer()
-
-      try {
-        const data = await sendImageMessage(sessionId, file, caption?.trim())
-        setMessageStatus(userMsgId, 'delivered')
-        handleAssistantReply(data)
-      } catch {
-        addMessage('system', "Sorry, I couldn't look at that image just now - please try again in a moment.")
-      } finally {
-        setIsTyping(false)
-      }
-    },
-    [addMessage, handleAssistantReply, isTyping, scheduleAbandonTimer, sessionId, setMessageStatus]
+    [addMessage, handleAssistantReply, isTyping, sessionId, setMessageStatus]
   )
 
   const value = useMemo(
@@ -254,9 +190,8 @@ export function ChatProvider({ children }) {
       isTyping,
       language,
       sendUserMessage,
-      sendUserImage,
     }),
-    [sessionId, messages, isTyping, language, sendUserMessage, sendUserImage]
+    [sessionId, messages, isTyping, language, sendUserMessage]
   )
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>

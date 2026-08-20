@@ -4,10 +4,9 @@ import './TypingIndicator.css'
 const CYCLE_MS = 800
 
 const DEFAULT_PHRASES = ['Checking menu...', 'Thinking...', 'Almost there...']
-const ORDER_PHRASES = ['Updating your order...', 'Thinking...', 'Almost there...']
 
-export default function TypingIndicator({ show, hint }) {
-  const phrases = hint === 'order' ? ORDER_PHRASES : DEFAULT_PHRASES
+export default function TypingIndicator({ show }) {
+  const phrases = DEFAULT_PHRASES
   const [phraseIndex, setPhraseIndex] = useState(0)
 
   useEffect(() => {

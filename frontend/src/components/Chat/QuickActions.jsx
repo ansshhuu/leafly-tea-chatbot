@@ -1,14 +1,12 @@
-import { Calendar, MapPin, Menu, Sparkles } from 'lucide-react'
+import { Gift, Leaf, Sparkles } from 'lucide-react'
 import { useChat } from '../../context/ChatContext'
 import './QuickActions.css'
 
-export const QUICK_ACTION_LABELS = ['View Menu', 'Café Location', 'Book a Table', 'Events & Offers']
+export const QUICK_ACTION_LABELS = ['View Products', 'Gift Hampers']
 
 const ACTIONS = [
-  { Icon: Menu, label: 'View Menu', message: 'Show me the menu' },
-  { Icon: MapPin, label: 'Café Location', message: 'Where is the café located?' },
-  { Icon: Calendar, label: 'Book a Table', message: "I'd like to book a table" },
-  { Icon: Sparkles, label: 'Events & Offers', message: 'Do you have any events or offers?' },
+  { Icon: Leaf, label: 'View Products', message: 'Show me your teas' },
+  { Icon: Gift, label: 'Gift Hampers', message: 'Do you have gift hampers?' },
 ]
 
 export function isQuickActionLabelSet(options) {

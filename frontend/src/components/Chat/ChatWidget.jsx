@@ -58,7 +58,7 @@ export default function ChatWidget() {
             <span className="bot-header-avatar">
               <img src="/bot-icon.png" alt="" />
             </span>
-            <h1>Rumi</h1>
+            <h1>Leafly</h1>
           </div>
           <div className="bot-header-controls">
             <button type="button" className="bot-header-icon-btn" onClick={close} aria-label="Close chat" title="Close">

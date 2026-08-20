@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, Coffee, CupSoda, Croissant, Sandwich } from 'lucide-react'
+import { ArrowLeft, Gift, Leaf } from 'lucide-react'
 import MenuItemImage from './MenuItemImage'
 import './MenuDisplay.css'
 
@@ -8,10 +8,7 @@ function formatPrice(price) {
 }
 
 const CATEGORY_ICONS = {
-  'Hot Beverages': Coffee,
-  'Cold Beverages': CupSoda,
-  Snacks: Sandwich,
-  Bakery: Croissant,
+  'Gift Hampers': Gift,
 }
 
 function MenuItemRow({ item }) {
@@ -39,8 +36,8 @@ export default function MenuDisplay({ categories }) {
   if (closed) {
     return (
       <button type="button" className="menu-reopen-btn" onClick={() => setClosed(false)}>
-        <Coffee size={16} strokeWidth={1.75} aria-hidden="true" />
-        Show menu
+        <Leaf size={16} strokeWidth={1.75} aria-hidden="true" />
+        Show teas
       </button>
     )
   }
@@ -60,13 +57,13 @@ export default function MenuDisplay({ categories }) {
         <button type="button" className="menu-back-btn" onClick={() => setClosed(true)} aria-label="Close menu">
           <ArrowLeft size={18} strokeWidth={1.75} />
         </button>
-        <h3 className="menu-display-title">Our Menu</h3>
-        <Coffee className="menu-display-deco-icon" size={18} strokeWidth={1.75} aria-hidden="true" />
+        <h3 className="menu-display-title">Our Teas</h3>
+        <Leaf className="menu-display-deco-icon" size={18} strokeWidth={1.75} aria-hidden="true" />
       </div>
 
       <div className="menu-tabs" role="tablist" aria-label="Menu categories">
         {nonEmptyCategories.map(({ category }) => {
-          const Icon = CATEGORY_ICONS[category] || Coffee
+          const Icon = CATEGORY_ICONS[category] || Leaf
           const isActive = category === activeCategory
           return (
             <button
