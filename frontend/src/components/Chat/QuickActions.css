@@ -1,0 +1,65 @@
+/* Desktop/tablet default: horizontal, wrapping row - NOT a vertical stack.
+   The panel itself is narrow (~380px) so these still wrap across 2 lines,
+   which is expected/fine - the point is a clean horizontal flow, not one
+   pill per line. */
+.quick-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0 0.25rem;
+}
+
+/* Minimalist outline pill - sober border/text, no bold "loud" styling.
+   Icon carries the only accent color; the button itself stays neutral
+   until hovered. */
+.quick-action-btn {
+  flex: 0 1 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--cafe-tan);
+  background: #fff;
+  color: var(--cafe-text);
+  font-size: 0.83rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.quick-action-icon {
+  color: var(--cafe-accent);
+  flex-shrink: 0;
+}
+
+.quick-action-btn:hover:not(:disabled) {
+  background: var(--cafe-cream);
+  border-color: var(--cafe-accent);
+  box-shadow: 0 2px 6px rgba(74, 50, 34, 0.12);
+}
+
+.quick-action-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.quick-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mobile: stacked vertical pills, full width. */
+@media (max-width: 600px) {
+  .quick-actions {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  .quick-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

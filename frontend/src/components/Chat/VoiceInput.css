@@ -1,0 +1,193 @@
+.voice-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.voice-input-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: none;
+  background: var(--cafe-accent);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.voice-input-btn:hover:not(:disabled) {
+  background: var(--cafe-brown);
+}
+
+.voice-input-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.voice-input-btn:disabled {
+  /* Matches .chat-input:disabled's muted tan treatment exactly, so the whole
+     row (text field + mic + send) reads as one disabled unit instead of the
+     mic looking like the odd one out still in full accent color. */
+  background: var(--cafe-tan);
+  color: var(--cafe-brown);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.voice-input-btn--fade-in {
+  animation: voice-fade-scale-in 0.18s ease both;
+}
+
+.voice-input-error,
+.voice-input-note {
+  position: absolute;
+  bottom: calc(100% + 0.4rem);
+  right: 0;
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  animation: voice-fade-scale-in 0.18s ease both;
+}
+
+.voice-input-error {
+  background: #fdf1ef;
+  color: #9a3b2e;
+  border: 1px solid #e8b4a8;
+}
+
+.voice-input-note {
+  background: var(--cafe-cream);
+  color: var(--cafe-brown);
+  border: 1px solid var(--cafe-tan);
+  white-space: normal;
+  max-width: 220px;
+  line-height: 1.35;
+}
+
+.voice-record-bar {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 0.5rem;
+  padding: 0.3rem 0.3rem 0.3rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--cafe-accent);
+  background: var(--cafe-cream);
+  height: 2.5rem;
+  box-sizing: border-box;
+}
+
+.voice-record-bar--enter {
+  animation: voice-fade-scale-in 0.2s ease both;
+}
+
+.voice-record-bar--transcribing {
+  border-color: var(--cafe-tan);
+}
+
+.voice-waveform {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 1.6rem;
+  overflow: hidden;
+}
+
+.voice-waveform-bar {
+  flex: 1 1 0;
+  min-width: 2px;
+  max-width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--cafe-accent);
+  transform: scaleY(0.15);
+  transform-origin: center;
+  transition: transform 0.08s linear;
+}
+
+.voice-record-bar--transcribing .voice-waveform-bar {
+  background: var(--cafe-tan);
+}
+
+.voice-loading-label {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  color: var(--cafe-brown);
+  white-space: nowrap;
+}
+
+.voice-record-btn {
+  width: 2.2rem;
+  height: 2.2rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+}
+
+.voice-record-btn:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.voice-record-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.voice-record-btn--cancel {
+  background: #fff;
+  color: var(--cafe-brown);
+  border: 1px solid var(--cafe-tan);
+}
+
+.voice-record-btn--cancel:hover:not(:disabled) {
+  background: #f1e7e0;
+}
+
+.voice-record-btn--confirm {
+  background: var(--cafe-accent);
+  color: #fff;
+}
+
+.voice-record-btn--confirm:hover:not(:disabled) {
+  background: var(--cafe-brown);
+}
+
+.voice-spinner {
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  animation: voice-spin 0.7s linear infinite;
+}
+
+@keyframes voice-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes voice-fade-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

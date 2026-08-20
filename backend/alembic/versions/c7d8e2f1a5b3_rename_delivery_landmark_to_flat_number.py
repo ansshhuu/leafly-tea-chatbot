@@ -1,0 +1,25 @@
+"""rename orders.delivery_landmark to delivery_flat_number
+
+Revision ID: c7d8e2f1a5b3
+Revises: b2f6a1c9d4e7
+Create Date: 2026-08-03 00:00:00.000000
+
+"""
+from typing import Sequence, Union
+
+from alembic import op
+
+
+# revision identifiers, used by Alembic.
+revision: str = 'c7d8e2f1a5b3'
+down_revision: Union[str, None] = 'b2f6a1c9d4e7'
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
+
+
+def upgrade() -> None:
+    op.alter_column('orders', 'delivery_landmark', new_column_name='delivery_flat_number')
+
+
+def downgrade() -> None:
+    op.alter_column('orders', 'delivery_flat_number', new_column_name='delivery_landmark')

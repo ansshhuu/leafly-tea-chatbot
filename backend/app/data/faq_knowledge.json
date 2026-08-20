@@ -1,0 +1,65 @@
+{
+  "_note": "Finalized generic content for this template cafe (not a real specific business) - edit directly if the real cafe's actual policies differ.",
+  "items": [
+    {
+      "question": "What are your opening hours?",
+      "answer": "We're open 8 AM to 10 PM Monday-Thursday and Sunday, and 8 AM to 11 PM on Friday-Saturday.",
+      "category": "hours"
+    },
+    {
+      "question": "Is parking available?",
+      "answer": "Yes, we have limited street parking right outside, and a small paid lot two minutes' walk away.",
+      "category": "parking"
+    },
+    {
+      "question": "Do you have WiFi?",
+      "answer": "Yes, free WiFi is available for all customers - ask our staff for the current password.",
+      "category": "wifi"
+    },
+    {
+      "question": "Do you host any events?",
+      "answer": "We host live acoustic music on weekend evenings and an open mic night on the last Friday of every month. Check our events board or ask staff for the current schedule.",
+      "category": "events"
+    },
+    {
+      "question": "Are pets allowed?",
+      "answer": "Well-behaved pets on a leash are welcome in our outdoor seating area. Indoor seating is pet-free for hygiene reasons.",
+      "category": "pets"
+    },
+    {
+      "question": "Can I book for a birthday celebration?",
+      "answer": "Absolutely! We do birthday setups with balloons and a small cake table on request - just give us at least 24 hours' notice through the reservation form or by calling ahead.",
+      "category": "birthday"
+    },
+    {
+      "question": "What payment methods do you accept?",
+      "answer": "We accept cash, all major credit/debit cards, and UPI payments.",
+      "category": "payment"
+    },
+    {
+      "question": "Do you offer delivery or takeaway?",
+      "answer": "Yes, takeaway is available at the counter, and we deliver within a 5km radius through our own delivery line or partner apps.",
+      "category": "delivery"
+    },
+    {
+      "question": "Can I book a table for a large group?",
+      "answer": "Yes, for groups of 8 or more we recommend booking at least a day in advance so we can arrange seating comfortably.",
+      "category": "group_bookings"
+    },
+    {
+      "question": "Do you have allergen information?",
+      "answer": "Most of our snacks contain gluten and dairy; we've marked vegetarian, vegan, and gluten-free items on the menu. Please inform staff of any severe allergies before ordering.",
+      "category": "allergens"
+    },
+    {
+      "question": "Where is the café located? What's your address? What's your phone number? Do you have multiple branches?",
+      "answer": "We have three locations: Bandra West (Mumbai), Indiranagar (Bengaluru), and Koregaon Park (Pune) - each with its own address, hours, and phone number.",
+      "category": "location"
+    },
+    {
+      "question": "Tell me about Rasa Café. What is Rasa Café? Who are you? What's your story? What kind of place is this?",
+      "answer": "Rasa Café was born from a simple belief - that great coffee can bring people together. We're more than just a café - we're a cozy corner in your day, a space to slow down, share stories, and savor the little things. We host coffee brewing workshops, acoustic chai evenings, and more throughout the month. We currently have three locations: Bandra West (Mumbai), Indiranagar (Bengaluru), and Koregaon Park (Pune).",
+      "category": "about"
+    }
+  ]
+}

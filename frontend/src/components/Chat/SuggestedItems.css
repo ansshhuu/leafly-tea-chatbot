@@ -1,0 +1,44 @@
+.suggested-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.suggested-item-card {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--cafe-tan);
+  border-radius: 10px;
+  background: var(--cafe-cream);
+}
+
+/* The card's own background matches .menu-item-image's default (both
+   var(--cafe-cream)) - override so a placeholder thumbnail still reads as
+   a distinct box instead of blending into the card. */
+.suggested-item-card .menu-item-image {
+  background: #fff;
+}
+
+.suggested-item-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--cafe-dark-brown);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.suggested-item-price {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--cafe-accent);
+}

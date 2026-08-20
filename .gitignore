@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Env files
+.env
+!.env.example
+
+# Node
+node_modules/
+dist/
+frontend/dist/
+
+# Whisper-WASM model files (~43MB) - fetched by scripts/fetch-models.sh via
+# the frontend's postinstall hook, never committed. See README.
+frontend/public/models/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

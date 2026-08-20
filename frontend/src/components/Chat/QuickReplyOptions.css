@@ -1,0 +1,36 @@
+/* 2 pills per row, wrapping to further rows as needed. */
+.quick-reply-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+/* Same clean/minimal aesthetic as QuickActions - sober border, no bold
+   "loud" styling. */
+.quick-reply-btn {
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--cafe-tan);
+  background: #fff;
+  color: var(--cafe-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.quick-reply-btn:hover:not(:disabled) {
+  background: var(--cafe-cream);
+  border-color: var(--cafe-accent);
+  box-shadow: 0 2px 6px rgba(74, 50, 34, 0.12);
+}
+
+.quick-reply-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.quick-reply-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

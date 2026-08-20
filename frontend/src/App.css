@@ -1,0 +1,26 @@
+.app-backdrop {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  color: var(--cafe-dark-brown);
+}
+
+.app-backdrop-logo {
+  font-size: 3rem;
+}
+
+.app-backdrop h1 {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.5rem;
+}
+
+.app-backdrop p {
+  margin: 0;
+  max-width: 32ch;
+  opacity: 0.75;
+  font-size: 0.95rem;
+}

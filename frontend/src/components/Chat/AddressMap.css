@@ -1,0 +1,99 @@
+.address-map {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.address-map-search {
+  position: relative;
+}
+
+.address-map-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--cafe-tan);
+  background: #fff;
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.address-map-search-input:focus {
+  border-color: var(--cafe-orange);
+}
+
+.address-map-canvas-wrapper {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--cafe-tan);
+}
+
+.address-map-canvas {
+  height: 220px;
+  width: 100%;
+  background: var(--cafe-cream);
+}
+
+.address-map-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(251, 243, 231, 0.85);
+  font-size: 0.85rem;
+  color: var(--cafe-brown);
+}
+
+.address-map-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--cafe-brown);
+  opacity: 0.75;
+}
+
+.address-map-resolved {
+  min-height: 1.2rem;
+  font-size: 0.83rem;
+  color: var(--cafe-text);
+  line-height: 1.35;
+}
+
+.address-map-resolving {
+  color: var(--cafe-brown);
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.address-map-confirm-btn {
+  align-self: flex-start;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--cafe-accent, var(--cafe-orange));
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.address-map-confirm-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.address-map-confirm-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.address-map-confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

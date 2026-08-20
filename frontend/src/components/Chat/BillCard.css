@@ -1,0 +1,116 @@
+.bill-card {
+  width: 100%;
+  border: 1px dashed var(--cafe-brown);
+  border-radius: 10px;
+  background: #fffdf9;
+  padding: 0.7rem 0.8rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.bill-card--confirmed {
+  border-style: solid;
+  border-color: var(--cafe-accent);
+}
+
+.bill-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--cafe-dark-brown);
+  padding-bottom: 0.4rem;
+  border-bottom: 1px dashed var(--cafe-tan);
+  margin-bottom: 0.4rem;
+}
+
+.bill-card-status {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--cafe-brown);
+  opacity: 0.7;
+}
+
+.bill-card-empty {
+  margin: 0.2rem 0 0.4rem;
+  font-size: 0.82rem;
+  color: var(--cafe-brown);
+  opacity: 0.75;
+  font-family: sans-serif;
+}
+
+.bill-card-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bill-card-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  font-size: 0.8rem;
+  color: var(--cafe-text);
+}
+
+.bill-card-item-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bill-card-item-qty {
+  opacity: 0.75;
+}
+
+.bill-card-item-price {
+  opacity: 0.75;
+  min-width: 3.2rem;
+  text-align: right;
+}
+
+.bill-card-item-total {
+  min-width: 3.6rem;
+  text-align: right;
+  font-weight: 600;
+}
+
+.bill-card-totals {
+  margin-top: 0.5rem;
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--cafe-tan);
+}
+
+.bill-card-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  padding: 0.1rem 0;
+  color: var(--cafe-text);
+}
+
+.bill-card-total-row--grand {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--cafe-accent);
+  padding-top: 0.3rem;
+  margin-top: 0.2rem;
+  border-top: 1px solid var(--cafe-tan);
+}
+
+.bill-card-total-row--discount {
+  color: #2f6b32;
+  font-weight: 600;
+}
+
+.bill-card-savings {
+  margin: 0.4rem 0 0;
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #2f6b32;
+}

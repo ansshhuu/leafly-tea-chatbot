@@ -1,0 +1,31 @@
+:root {
+  --cafe-cream: #fbf3e7;
+  --cafe-tan: #e8d5b7;
+  --cafe-brown: #6f4e37;
+  --cafe-dark-brown: #4a3222;
+  --cafe-orange: #d98e4a;
+  --cafe-accent: #c1440e;
+  --cafe-text: #3a2a1d;
+  --cafe-bubble-user: #d98e4a;
+  --cafe-bubble-assistant: #f3ece1;
+
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(180deg, var(--cafe-cream) 0%, var(--cafe-tan) 100%);
+  color: var(--cafe-text);
+}

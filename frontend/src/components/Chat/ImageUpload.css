@@ -1,0 +1,47 @@
+.image-upload {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.image-upload-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: none;
+  background: var(--cafe-accent);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.image-upload-btn:hover:not(:disabled) {
+  background: var(--cafe-brown);
+}
+
+.image-upload-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.image-upload-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.image-upload-error {
+  position: absolute;
+  bottom: calc(100% + 0.4rem);
+  right: 0;
+  background: #fdf1ef;
+  color: #9a3b2e;
+  border: 1px solid #e8b4a8;
+  border-radius: 8px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}

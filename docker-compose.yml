@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-cafe_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cafe_password}
+      POSTGRES_DB: ${POSTGRES_DB:-cafe_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cafe_user} -d ${POSTGRES_DB:-cafe_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    # Dockerfile's CMD has no --reload (production-ready, e.g. for Render);
+    # this override adds it back for local dev, matching the source bind
+    # mount below. GEMINI_API_KEY and the other Day2-4 settings come from
+    # backend/.env via that same mount - pydantic-settings loads it from
+    # /app/.env automatically, no need to list every var here.
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-cafe_user}:${POSTGRES_PASSWORD:-cafe_password}@postgres:5432/${POSTGRES_DB:-cafe_db}
+      SYNC_DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-cafe_user}:${POSTGRES_PASSWORD:-cafe_password}@postgres:5432/${POSTGRES_DB:-cafe_db}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
