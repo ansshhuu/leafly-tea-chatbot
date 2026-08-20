@@ -3,15 +3,15 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-cafe_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cafe_password}
-      POSTGRES_DB: ${POSTGRES_DB:-cafe_db}
+      POSTGRES_USER: ${POSTGRES_USER:-leafly_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-leafly_password}
+      POSTGRES_DB: ${POSTGRES_DB:-leafly_db}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cafe_user} -d ${POSTGRES_DB:-cafe_db}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-leafly_user} -d ${POSTGRES_DB:-leafly_db}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -26,8 +26,8 @@ services:
     # /app/.env automatically, no need to list every var here.
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     environment:
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-cafe_user}:${POSTGRES_PASSWORD:-cafe_password}@postgres:5432/${POSTGRES_DB:-cafe_db}
-      SYNC_DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-cafe_user}:${POSTGRES_PASSWORD:-cafe_password}@postgres:5432/${POSTGRES_DB:-cafe_db}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-leafly_user}:${POSTGRES_PASSWORD:-leafly_password}@postgres:5432/${POSTGRES_DB:-leafly_db}
+      SYNC_DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-leafly_user}:${POSTGRES_PASSWORD:-leafly_password}@postgres:5432/${POSTGRES_DB:-leafly_db}
     ports:
       - "8000:8000"
     volumes:
