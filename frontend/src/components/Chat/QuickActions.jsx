@@ -1,11 +1,18 @@
-import { Gift, Leaf, Sparkles } from 'lucide-react'
+import { Gift, HelpCircle, Leaf, Sparkles } from 'lucide-react'
 import { useChat } from '../../context/ChatContext'
 import './QuickActions.css'
 
-export const QUICK_ACTION_LABELS = ['View Products', 'Gift Hampers']
+export const QUICK_ACTION_LABELS = [
+  'Explore Tea Collections',
+  'Wellness Benefits',
+  'Ask About a Tea',
+  'Gift Hampers',
+]
 
 const ACTIONS = [
-  { Icon: Leaf, label: 'View Products', message: 'Show me your teas' },
+  { Icon: Leaf, label: 'Explore Tea Collections', message: 'Show me your teas' },
+  { Icon: Sparkles, label: 'Wellness Benefits', message: 'What are the wellness benefits of your teas?' },
+  { Icon: HelpCircle, label: 'Ask About a Tea', message: 'Tell me about your teas' },
   { Icon: Gift, label: 'Gift Hampers', message: 'Do you have gift hampers?' },
 ]
 

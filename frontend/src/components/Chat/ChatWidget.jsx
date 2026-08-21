@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Leaf } from 'lucide-react'
 import ChatWindow from './ChatWindow'
 import FloatingBotButton from './FloatingBotButton'
 import { useChat } from '../../context/ChatContext'
@@ -56,9 +57,9 @@ export default function ChatWidget() {
         <header className="bot-header">
           <div className="bot-header-identity">
             <span className="bot-header-avatar">
-              <img src="/bot-icon.png" alt="" />
+              <Leaf className="bot-header-leaf" aria-hidden="true" />
             </span>
-            <h1>Leafly</h1>
+            <h1>Leafly Assistant</h1>
           </div>
           <div className="bot-header-controls">
             <button type="button" className="bot-header-icon-btn" onClick={close} aria-label="Close chat" title="Close">

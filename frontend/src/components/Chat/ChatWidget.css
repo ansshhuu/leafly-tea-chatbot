@@ -49,26 +49,20 @@
 }
 
 .bot-header-avatar {
-  width: 34px;
-  /* bot-icon.png is 929x967px, not a perfect square - matching the real
-     aspect ratio here (rather than forcing height:34px + object-fit:cover)
-     means there's nothing for object-fit to crop, so the artwork's own
-     brown circular background renders fully and evenly. See
-     FloatingBotButton.css for the full explanation. */
-  aspect-ratio: 929 / 967;
+  width: 26px;
+  height: 26px;
   flex-shrink: 0;
-  border-radius: 50%;
-  overflow: hidden;
   display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
 }
 
-.bot-header-avatar img {
+.bot-header-leaf {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  border-radius: 50%;
-  display: block;
+  color: var(--cafe-orange);
+  fill: var(--cafe-orange);
 }
 
 .bot-header-identity h1 {

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Leaf } from 'lucide-react'
 import MessageBubble from './MessageBubble'
 import TypingIndicator from './TypingIndicator'
+import WelcomeScreen from './WelcomeScreen'
 import { isQuickActionLabelSet } from './QuickActions'
 import { useChat } from '../../context/ChatContext'
 import './ChatWindow.css'
@@ -8,7 +10,7 @@ import './ChatWindow.css'
 const TEXTAREA_MAX_HEIGHT = 120
 const SINGLE_LINE_THRESHOLD = 44
 const BUTTON_ONLY_PLACEHOLDER = 'Please select an option above'
-const DEFAULT_PLACEHOLDER = 'Type your message...'
+const DEFAULT_PLACEHOLDER = 'Ask me anything...'
 
 // True when the latest assistant message expects a quick-reply tap rather
 // than free text. The general_chat "quick action" suggestions (View
@@ -75,28 +77,35 @@ export default function ChatWindow() {
 
   const inputBlocked = useMemo(() => isButtonOnlyStep(messages[messages.length - 1]), [messages])
   const canSend = !isTyping && !inputBlocked && draft.trim().length > 0
+  const isWelcomeState = messages.length === 1 && messages[0].id === 'welcome-1'
 
   return (
     <div className="chat-window">
       <div className="chat-messages" ref={listRef}>
-        {messages.length === 0 && (
-          <p className="chat-empty-state">No messages yet - say hello or ask about the menu!</p>
+        {isWelcomeState ? (
+          <WelcomeScreen text={messages[0].text} />
+        ) : (
+          <>
+            {messages.length === 0 && (
+              <p className="chat-empty-state">No messages yet - say hello or ask about the menu!</p>
+            )}
+            {messages.map((msg, index) => (
+              <MessageBubble
+                key={msg.id}
+                role={msg.role}
+                text={msg.text}
+                timestamp={msg.timestamp}
+                menuDisplay={msg.menuDisplay}
+                suggestedItems={msg.suggestedItems}
+                quickReplyOptions={msg.quickReplyOptions}
+                locationCards={msg.locationCards}
+                status={msg.status}
+                isLatest={index === messages.length - 1}
+              />
+            ))}
+            <TypingIndicator show={isTyping} />
+          </>
         )}
-        {messages.map((msg, index) => (
-          <MessageBubble
-            key={msg.id}
-            role={msg.role}
-            text={msg.text}
-            timestamp={msg.timestamp}
-            menuDisplay={msg.menuDisplay}
-            suggestedItems={msg.suggestedItems}
-            quickReplyOptions={msg.quickReplyOptions}
-            locationCards={msg.locationCards}
-            status={msg.status}
-            isLatest={index === messages.length - 1}
-          />
-        ))}
-        <TypingIndicator show={isTyping} />
       </div>
 
       <form className="chat-input-bar" onSubmit={handleFormSubmit}>
@@ -112,7 +121,7 @@ export default function ChatWindow() {
           aria-label={inputBlocked ? BUTTON_ONLY_PLACEHOLDER : 'Message'}
         />
         <button className="chat-send-btn" type="submit" disabled={!canSend} aria-label="Send message">
-          <span aria-hidden="true">&#10148;</span>
+          <Leaf size={16} strokeWidth={2} aria-hidden="true" />
         </button>
       </form>
     </div>

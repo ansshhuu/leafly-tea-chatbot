@@ -7,13 +7,13 @@ const ChatContext = createContext(null)
 const SESSION_ID_KEY = 'cafe.sessionId'
 const MESSAGES_KEY = 'cafe.messages'
 
-const WELCOME_QUICK_ACTIONS = ['View Products', 'Gift Hampers']
+const WELCOME_QUICK_ACTIONS = ['Explore Tea Collections', 'Wellness Benefits', 'Ask About a Tea', 'Gift Hampers']
 
 const initialMessages = [
   {
     id: 'welcome-1',
     role: 'assistant',
-    text: "Hi there! 👋 Welcome to Leafly. How can I help you today?",
+    text: "Hi there! 👋 I'm your Leafly Assistant. How can I help you today?",
     timestamp: new Date().toISOString(),
     quickReplyOptions: WELCOME_QUICK_ACTIONS,
   },

@@ -1,6 +1,6 @@
 import re
 
-QUICK_ACTION_OPTIONS = ["View Products", "Gift Hampers"]
+QUICK_ACTION_OPTIONS = ["Explore Tea Collections", "Wellness Benefits", "Ask About a Tea", "Gift Hampers"]
 
 _CAPABILITY_PHRASES = (
     "what can you do",

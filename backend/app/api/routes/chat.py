@@ -11,8 +11,8 @@ from app.services.ai_service import process_chat_message
 
 router = APIRouter()
 
-DEFAULT_WELCOME_TEXT = "Hi there! 👋 Welcome to Leafly. How can I help you today?"
-WELCOME_QUICK_ACTIONS = ["View Products", "Gift Hampers"]
+DEFAULT_WELCOME_TEXT = "Hi there! 👋 I'm your Leafly Assistant. How can I help you today?"
+WELCOME_QUICK_ACTIONS = ["Explore Tea Collections", "Wellness Benefits", "Ask About a Tea", "Gift Hampers"]
 
 
 @router.get("/welcome", response_model=WelcomeResponse)
