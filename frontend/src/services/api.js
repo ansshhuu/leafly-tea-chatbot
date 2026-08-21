@@ -6,15 +6,6 @@ export async function checkHealth() {
   return res.json()
 }
 
-export async function fetchWelcome(coords) {
-  const params = coords ? `?lat=${coords.lat}&lon=${coords.lon}` : ''
-  const res = await fetch(`${BASE_URL}/api/chat/welcome${params}`)
-  if (!res.ok) {
-    throw new Error(`Welcome request failed (${res.status})`)
-  }
-  return res.json()
-}
-
 export async function sendMessage(sessionId, message) {
   const body = { session_id: sessionId, message }
 

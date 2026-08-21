@@ -9,7 +9,6 @@ from app.services import (
     product_cache_service,
     session_context_service,
     session_service,
-    weather_service,
 )
 from app.services.rate_limiter import rate_limiter
 
@@ -51,7 +50,6 @@ def _reset_shared_state():
     cache_service.clear()
     session_context_service.clear()
     session_service.clear()
-    weather_service.clear()
     product_cache_service.clear()
     rate_limiter._minute_key = None
     rate_limiter._minute_count = 0

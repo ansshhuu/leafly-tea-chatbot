@@ -17,13 +17,12 @@ powered by Gemini (`gemini-3.1-flash-lite`).
 |---|---|
 | Context-aware chat (last 10 messages) | `backend/app/services/ai_service.py` |
 | Tea catalog search + filters (tea type/origin/caffeine level/badge/price/gifting) | `product_context.py` |
-| Personalized recommendations (weather-aware tea type bias, budget combos) | `recommendation_service.py` |
+| Personalized recommendations (keyword-based tea type bias, budget combos) | `recommendation_service.py` |
 | "No exact match" fallback (closest available product, never a dead end) | `product_context.get_closest_items` |
 | Dynamic FAQ (keyword-matched, grounded, never invented - some entries still TODO pending real answers from the team) | `faq_service.py`, `app/data/faq_knowledge.json` |
 | Sentiment detection + escalation logging | `escalation_service.py` |
 | Multilingual (English/Hindi/Hinglish), incl. product-name translation | `app/prompts/system_prompt.py`, `app/prompts/product_translations.py` |
 | Rate limiting + in-memory response caching | `rate_limiter.py`, `cache_service.py` |
-| Weather-aware welcome greeting (browser geolocation, best-effort) | `weather_service.py`, `GET /api/chat/welcome` |
 
 ## Project structure
 

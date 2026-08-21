@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Leaf } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import MessageBubble from './MessageBubble'
 import TypingIndicator from './TypingIndicator'
 import WelcomeScreen from './WelcomeScreen'
@@ -81,9 +81,9 @@ export default function ChatWindow() {
 
   return (
     <div className="chat-window">
-      <div className="chat-messages" ref={listRef}>
+      <div className={`chat-messages${!isWelcomeState ? ' chat-messages--scrollable' : ''}`} ref={listRef}>
         {isWelcomeState ? (
-          <WelcomeScreen text={messages[0].text} />
+          <WelcomeScreen />
         ) : (
           <>
             {messages.length === 0 && (
@@ -121,7 +121,7 @@ export default function ChatWindow() {
           aria-label={inputBlocked ? BUTTON_ONLY_PLACEHOLDER : 'Message'}
         />
         <button className="chat-send-btn" type="submit" disabled={!canSend} aria-label="Send message">
-          <Leaf size={16} strokeWidth={2} aria-hidden="true" />
+          <ArrowRight size={16} strokeWidth={2.5} aria-hidden="true" />
         </button>
       </form>
     </div>

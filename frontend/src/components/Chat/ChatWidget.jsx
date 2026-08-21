@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { Leaf } from 'lucide-react'
 import ChatWindow from './ChatWindow'
 import FloatingBotButton from './FloatingBotButton'
 import { useChat } from '../../context/ChatContext'
@@ -20,6 +19,18 @@ function writeStoredOpenState(isOpen) {
     sessionStorage.setItem(OPEN_STATE_KEY, String(isOpen))
   } catch {
   }
+}
+
+// Header leaf logo — uses the /leaf.png asset from /public.
+function LeafLogo({ className }) {
+  return (
+    <img
+      src="/leaf.png"
+      alt=""
+      className={className}
+      aria-hidden="true"
+    />
+  )
 }
 
 export default function ChatWidget() {
@@ -57,7 +68,7 @@ export default function ChatWidget() {
         <header className="bot-header">
           <div className="bot-header-identity">
             <span className="bot-header-avatar">
-              <Leaf className="bot-header-leaf" aria-hidden="true" />
+              <LeafLogo className="bot-header-logo" />
             </span>
             <h1>Leafly Assistant</h1>
           </div>

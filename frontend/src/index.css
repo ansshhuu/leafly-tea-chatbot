@@ -1,11 +1,11 @@
 :root {
   --leafly-cream: #f7f3e9;
   --leafly-tan: #e8dfc5;
-  --leafly-green-dark: #0d2818;
+  --leafly-green-dark: #1A3320;  /* sampled from leaf.png background */
   --leafly-green: #1f4d34;
   --leafly-gold: #d4af37;
   --leafly-text: #1f2e26;
-  --leafly-bubble-user: #0d2818;
+  --leafly-bubble-user: #1A3320;
   --leafly-bubble-assistant: #f0ead9;
 
   /* Legacy variable names (still referenced across the chat component

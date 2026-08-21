@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.schemas.chat import ChatRequest, ChatResponse, WelcomeResponse
 from app.schemas.chat_history import ChatHistoryRead
-from app.services import chat_history_service, weather_service
+from app.services import chat_history_service
 from app.services.ai_service import process_chat_message
 
 router = APIRouter()
@@ -16,14 +16,8 @@ WELCOME_QUICK_ACTIONS = ["Explore Tea Collections", "Wellness Benefits", "Ask Ab
 
 
 @router.get("/welcome", response_model=WelcomeResponse)
-async def welcome(lat: float | None = None, lon: float | None = None) -> WelcomeResponse:
-    # lat/lon are the customer's own browser geolocation, when granted - see
-    # weather_service.get_condition - falling back to a default location
-    # when omitted (permission denied/unavailable), so this never blocks on it.
-    condition = await weather_service.get_condition(lat, lon)
-    hint = weather_service.get_weather_hint(condition)
-    reply = f"{DEFAULT_WELCOME_TEXT} {hint}" if hint else DEFAULT_WELCOME_TEXT
-    return WelcomeResponse(reply=reply, quick_reply_options=WELCOME_QUICK_ACTIONS)
+async def welcome() -> WelcomeResponse:
+    return WelcomeResponse(reply=DEFAULT_WELCOME_TEXT, quick_reply_options=WELCOME_QUICK_ACTIONS)
 
 
 @router.post("", response_model=ChatResponse)

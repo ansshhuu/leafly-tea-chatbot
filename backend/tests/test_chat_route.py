@@ -6,7 +6,6 @@ from app.api.routes import chat as chat_route
 from app.db.session import get_db
 from app.main import app
 from app.models.chat_history import ChatHistory
-from app.services import weather_service
 
 FAKE_RESULT = {
     "reply_text": "Hello there!",
@@ -127,9 +126,7 @@ async def test_chat_history_endpoint_empty_for_unknown_session(db_session):
     assert response.json() == []
 
 
-async def test_welcome_endpoint_uses_generic_message_when_weather_is_pleasant(monkeypatch):
-    monkeypatch.setattr(weather_service, "get_condition", AsyncMock(return_value="pleasant"))
-
+async def test_welcome_endpoint_returns_static_greeting():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.get("/api/chat/welcome")
@@ -138,24 +135,3 @@ async def test_welcome_endpoint_uses_generic_message_when_weather_is_pleasant(mo
     body = response.json()
     assert body["reply"] == chat_route.DEFAULT_WELCOME_TEXT
     assert body["quick_reply_options"] == chat_route.WELCOME_QUICK_ACTIONS
-
-
-async def test_welcome_endpoint_mentions_rain_when_condition_is_rainy(monkeypatch):
-    monkeypatch.setattr(weather_service, "get_condition", AsyncMock(return_value="rainy"))
-
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.get("/api/chat/welcome")
-
-    assert "raining" in response.json()["reply"].lower()
-
-
-async def test_welcome_endpoint_falls_back_to_generic_message_when_weather_fetch_fails(monkeypatch):
-    monkeypatch.setattr(weather_service, "get_condition", AsyncMock(return_value=None))
-
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.get("/api/chat/welcome")
-
-    assert response.status_code == 200
-    assert response.json()["reply"] == chat_route.DEFAULT_WELCOME_TEXT

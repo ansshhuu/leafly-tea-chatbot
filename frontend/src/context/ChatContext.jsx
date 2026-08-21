@@ -1,6 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { fetchChatHistory, fetchWelcome, sendMessage } from '../services/api'
-import { getUserCoordinates } from '../services/geolocation'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { fetchChatHistory, sendMessage } from '../services/api'
 
 const ChatContext = createContext(null)
 
@@ -63,7 +62,6 @@ function historyRowToMessage(row) {
 
 export function ChatProvider({ children }) {
   const [sessionId] = useState(() => readSessionStorage(SESSION_ID_KEY) || createSessionId())
-  const isFreshSessionRef = useRef(loadStoredMessages() === null)
   const [messages, setMessages] = useState(() => loadStoredMessages() || initialMessages)
   const [isTyping, setIsTyping] = useState(false)
   const [language, setLanguage] = useState('en')
@@ -75,35 +73,6 @@ export function ChatProvider({ children }) {
   useEffect(() => {
     writeSessionStorage(MESSAGES_KEY, JSON.stringify(messages))
   }, [messages])
-
-  useEffect(() => {
-    if (!isFreshSessionRef.current) return
-    let cancelled = false
-
-    // Geolocation permission is requested here, but never blocks chat load -
-    // getUserCoordinates always resolves (never rejects) within its own
-    // timeout, falling back to null (cafe-location weather) on denial,
-    // unavailability, or timeout.
-    getUserCoordinates()
-      .then((coords) => (cancelled ? null : fetchWelcome(coords)))
-      .then((data) => {
-        if (!data) return
-        if (cancelled || !data.reply) return
-        setMessages((current) =>
-          current.map((msg) =>
-            msg.id === 'welcome-1'
-              ? { ...msg, text: data.reply, quickReplyOptions: data.quick_reply_options || msg.quickReplyOptions }
-              : msg
-          )
-        )
-      })
-      .catch(() => {
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
 
   useEffect(() => {
     let cancelled = false

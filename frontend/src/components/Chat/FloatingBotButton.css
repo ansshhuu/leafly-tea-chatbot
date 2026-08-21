@@ -1,64 +1,98 @@
+/* ─── Floating chat trigger button ───────────────────────────────── */
+
 .floating-bot-btn {
   position: fixed;
   bottom: 24px;
   right: 24px;
   width: 60px;
-  /* bot-icon.png is 929x967px, NOT a perfect square (~4% taller than
-     wide) - forcing an exact 60x60 box and relying on object-fit:cover to
-     paper over the mismatch crops a visible sliver off the artwork's own
-     brown circle (the crop amount doesn't land perfectly on the circle's
-     margin, and rounds slightly differently at every avatar size). Setting
-     aspect-ratio to the image's real ratio means there is nothing to crop
-     or letterbox in the first place - see the matching img rule below. */
-  aspect-ratio: 929 / 967;
+  height: 60px;
   border-radius: 50%;
   border: none;
-  padding: 0;
-  background: #fff;
-  box-shadow: 0 4px 16px rgba(74, 50, 34, 0.3);
+  padding: 10px;                /* inset so leaf.png doesn't touch the edge */
+  background: var(--leafly-green-dark);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 9999;
   overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  /* Base gold glow */
+  box-shadow:
+    0 0 15px rgba(212, 175, 55, 0.6),
+    0 0 30px rgba(212, 175, 55, 0.3),
+    0 4px 14px rgba(13, 40, 24, 0.35);
+
+  /* Pulse animation runs continuously while the button is visible */
+  animation: leafly-glow-pulse 2.4s ease-in-out infinite;
+
+  transition: transform 0.15s ease;
 }
 
+/* ─── Glow pulse keyframes ────────────────────────────────────────── */
+
+@keyframes leafly-glow-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 15px rgba(212, 175, 55, 0.6),
+      0 0 30px rgba(212, 175, 55, 0.3),
+      0 4px 14px rgba(13, 40, 24, 0.35);
+  }
+  50% {
+    box-shadow:
+      0 0 22px rgba(212, 175, 55, 0.85),
+      0 0 44px rgba(212, 175, 55, 0.45),
+      0 0 60px rgba(212, 175, 55, 0.18),
+      0 4px 14px rgba(13, 40, 24, 0.35);
+  }
+}
+
+/* ─── Hover / active ─────────────────────────────────────────────── */
+
 .floating-bot-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(74, 50, 34, 0.4);
+  transform: scale(1.1);
+  animation-play-state: paused;   /* freeze pulse on hover so it doesn't fight */
+  box-shadow:
+    0 0 24px rgba(212, 175, 55, 0.9),
+    0 0 48px rgba(212, 175, 55, 0.5),
+    0 6px 20px rgba(13, 40, 24, 0.45);
 }
 
 .floating-bot-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.93);
 }
+
+/* ─── Leaf image inside the button ──────────────────────────────── */
 
 .floating-bot-btn-icon {
   width: 100%;
   height: 100%;
-  /* contain (not cover): the container now matches the image's own
-     aspect-ratio exactly, so this never crops - contain is just the
-     belt-and-suspenders choice in case of any sub-pixel rounding. */
   object-fit: contain;
-  border-radius: 50%;
   pointer-events: none;
+  /* Slight brightness boost so leaf.png pops against the dark green bg */
+  filter: brightness(1.08) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
+
+/* ─── Unread dot ─────────────────────────────────────────────────── */
 
 .floating-bot-btn-dot {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 14px;
-  height: 14px;
+  top: 6px;
+  right: 6px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
-  background: var(--cafe-accent);
-  border: 2px solid #fff;
+  background: #D4AF37;
+  border: 2px solid var(--leafly-green-dark);
 }
+
+/* ─── Mobile ─────────────────────────────────────────────────────── */
 
 @media (max-width: 600px) {
   .floating-bot-btn {
     bottom: 16px;
     right: 16px;
+    width: 54px;
+    height: 54px;
   }
 }
